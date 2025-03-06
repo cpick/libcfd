@@ -220,7 +220,7 @@ impl Connection {
             request_type,
             metadata,
             send_stream,
-            recv_stream,
+            recv_stream: Some(recv_stream),
         })
     }
 }
@@ -231,14 +231,14 @@ pub struct ConnectRequest {
     pub request_type: ConnectionType,
     pub metadata: HashMap<String, String>,
     send_stream: QuinnSendStream,
-    pub recv_stream: QuinnRecvStream,
+    pub recv_stream: Option<QuinnRecvStream>,
 }
 
 impl ConnectRequest {
     pub async fn respond_with(
         mut self,
         response: ConnectResponse,
-    ) -> Result<(QuinnSendStream, QuinnRecvStream)> {
+    ) -> Result<(QuinnSendStream, Option<QuinnRecvStream>)> {
         let mut connect_response_builder = TypedBuilder::<connect_response::Owned>::new_default();
         let mut root_builder = connect_response_builder.init_root();
         match response {
